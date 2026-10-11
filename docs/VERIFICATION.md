@@ -1,5 +1,8 @@
 # Verification — 11 October 2026
 
+This record covers only the root TF1.15 package. For the historical Kaggle P100
+TF1.4 sources and release, see [Kaggle verification](KAGGLE-VERIFICATION.md).
+
 Tested on Windows x86-64 with Python 3.7.9, TensorFlow 1.15.0, NumPy 1.18.5,
 and the package versions saved in `requirements-lock.txt`.
 

@@ -1,0 +1,55 @@
+{
+  "resume": {
+    "JP-full": {
+      "step": 7,
+      "max_absolute_difference": 0.0,
+      "replay_count": 2,
+      "variables": 524
+    },
+    "JC-partial": {
+      "step": 7,
+      "max_absolute_difference": 0.0,
+      "replay_count": 2,
+      "variables": 524
+    },
+    "CP-base": {
+      "step": 7,
+      "max_absolute_difference": 0.0,
+      "replay_count": null,
+      "variables": 492
+    }
+  },
+  "device": "CPU",
+  "evaluation": {
+    "JP-full": {
+      "labels": [
+        "Jazz",
+        "Pop"
+      ],
+      "phrases_per_direction": 5,
+      "midi_files": 24
+    },
+    "JC-partial": {
+      "labels": [
+        "Jazz",
+        "Classic"
+      ],
+      "phrases_per_direction": 5,
+      "midi_files": 24
+    },
+    "CP-base": {
+      "labels": [
+        "Classic",
+        "Pop"
+      ],
+      "phrases_per_direction": 5,
+      "midi_files": 24
+    }
+  },
+  "runtime": {
+    "cuda_build": true,
+    "tensorflow": "1.4.0",
+    "runtime": "native TensorFlow 1 (not compat.v1)"
+  },
+  "real_data_training": false
+}

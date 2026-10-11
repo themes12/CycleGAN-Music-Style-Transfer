@@ -1,0 +1,24 @@
+{
+  "source": "Downloaded successful native TF1.4 JC base snapshot, 2026-09-09",
+  "original_sha256": {
+    "tf_compat.py": "2c3222affcb5df940bb054e2597e5a28c0e8c35ebec798eb1072779494f61ca9",
+    "model.py": "81937ffe2aca0757d13eee558150fd40ac075cdd4ae5b2f3cd4fd04519432d37",
+    "module.py": "72a748d4d89b17d50dbd191011d8813f0c0f41e45d2646917890ff6627823447",
+    "ops.py": "e630678d8da46619a20491d7881928aef1f9e5ef6904507c0f726a291b891c3e",
+    "utils.py": "8c1ec2ef9d8e93ea0a69c397b187d72f8bd0269c8e461f2fd9b6946877f92f01",
+    "write_midi.py": "ff6730ad15920972cd5ce1d87ef8ab30b04fc39ba223a31170385a44df30e04d",
+    "style_classifier.py": "0bd62faad2ea746d1d800aeda2c6846501377231d9519a01f89f9bf697e7ff3c",
+    "experiment.py": "36d1a9b5a5b79a895b1cefdc0e057a09ead15ee4260238c8ba79eb465182d929",
+    "experiment_data.py": "9bb7cb7b8f489ba4abc904f25ffbf0fc4b13f3c16a2c0caf62b1de3959282b6b",
+    "experiment_metrics.py": "da7f3c050c08c58f71a6517bfcfd0061a4fe25f0335c2f2afcffd2163d47459e",
+    "experiment_health.py": "de9b4f385a91536a611819bf8303ad122c4239863d91d6b71f8e1fbfdef15fa5",
+    "experiment_objectives.py": "3728448434a50a91cd1fc796b80a8a9d54aeccc9ff95bfd145f4817a2306636e",
+    "repro_data.py": "e9bb5d5466e873459463db0d27e92c7a121d1632ee979ec4d1f993911e1831b4",
+    "kaggle/bootstrap.py": "a2e7a466c2031c13049eb9e21d657527d44a16be1c077cd1952b319a30cee903",
+    "kaggle/preflight.py": "0c4c652ac43764bda96a0d98e009e302cedd6d65a7259c10cffdbd95fe566005",
+    "kaggle/conda-linux-64.lock": "c52f18870d05b4e02a9c52d8ebc5a9bd262a2bb6f2a4c357c4ec2f4354454117",
+    "kaggle/pip-bootstrap.lock": "d608da7a87c2a657e6bf92b50947d22597123edbd24e8812236c1bc1e4fe9d9a",
+    "kaggle/requirements-tf14.lock": "787a8c9e82e23ba653fd5b31d42dc2ed2e9e4e7cd80528802c391433c4fc52c7",
+    "kaggle/requirements-tf14.in": "34d5d175b08fe41a9e67de6533d1d9b5f220c9c46c70ccf8d2309c3a9f92982f"
+  }
+}

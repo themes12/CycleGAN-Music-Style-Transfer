@@ -1,0 +1,14 @@
+{
+  "JC_J_test": {
+    "n": 1125,
+    "max_probability_difference_cpu_vs_saved_gpu": 3.516674041748047e-06,
+    "correct": 942
+  },
+  "trained_updates": 0,
+  "JC_C_test": {
+    "n": 1125,
+    "max_probability_difference_cpu_vs_saved_gpu": 6.5267086029052734e-06,
+    "correct": 1066
+  },
+  "device": "CPU"
+}

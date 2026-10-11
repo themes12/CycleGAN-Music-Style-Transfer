@@ -12,3 +12,8 @@ logs/
 dist/
 *.zip
 .pytest_cache/
+.tf14-env/
+tf14-download-cache/
+inputs/
+runs/
+downloads/

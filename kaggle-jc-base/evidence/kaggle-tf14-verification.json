@@ -1,0 +1,49 @@
+{
+  "runtime": {
+    "python": "3.5.4",
+    "convolution_backward_and_adam": "passed",
+    "training_device": "/cpu:0",
+    "cuda_package": "8.0",
+    "device": "cpu",
+    "cuda_runtime": null,
+    "tensorflow": "1.4.0",
+    "native_tf1": true,
+    "devices": [
+      "/job:localhost/replica:0/task:0/device:CPU:0"
+    ],
+    "nvidia_smi": null,
+    "cudnn": 6021,
+    "cuda_query_status": 38,
+    "numpy": "1.14.2",
+    "passed": true,
+    "cpu_only_packaging_check": true
+  },
+  "native_tf1_tests": 10,
+  "tf2_compatibility_tests": 10,
+  "portable_run_tests": 8,
+  "resume": {
+    "gan": {
+      "optimizer_slots_compared": 324,
+      "variables_compared": 492,
+      "completed_steps": 2,
+      "max_absolute_difference": 0.0
+    },
+    "classifier": {
+      "optimizer_slots_compared": 22,
+      "variables_compared": 37,
+      "completed_steps": 2,
+      "max_absolute_difference": 0.0
+    }
+  },
+  "time_budget_checkpoint": {
+    "state": "paused",
+    "step": 1
+  },
+  "evaluation_smoke": {
+    "passed": true,
+    "phrases_per_direction": 2,
+    "midi_files": 12
+  },
+  "kaggle_p100_gpu_tested": false,
+  "local_device": "cpu"
+}

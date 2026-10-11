@@ -1,34 +1,40 @@
 # Symbolic Music Genre Transfer with CycleGAN
 
-## Run and share experiments
+## Reproduce the original Kaggle P100 experiments
 
 This fork of [Sumu Zhao's original project](https://github.com/sumuzhao/CycleGAN-Music-Style-Transfer)
-adds a pinned environment and a tested workflow for sharing experiments.
+shares the **native TensorFlow 1.4 experiment code actually used on Kaggle Tesla P100**:
+Python **3.5.4**, CUDA **8.0**, cuDNN **6.0.21**, 30 epochs, seed 19, batch 16,
+and evaluation at epochs 20 and 30.
 
-For a runnable copy with a pinned Python 3.7 / TensorFlow 1.15 environment,
-dataset preparation, a train/test pipeline and a real smoke test, start with
-[the sharing guide (Thai)](docs/SHARING.md). The original research description
-and commands remain below. Use `--run_id` to name experiments and load their
-checkpoints on any day.
+**Start with [the Kaggle sharing guide (Thai)](docs/KAGGLE.md)** and download
+[the complete TF1.4 release](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/tag/kaggle-tf14-v1).
+
+| Experiment | Source | Notebook | Input bundle |
+|---|---|---|---|
+| JC base, trained from scratch | [kaggle-jc-base](kaggle-jc-base) | [JC base notebook](kaggle-jc-base/kaggle/cyclegan_tf14.ipynb) | [cyclegan-kaggle-tf14.zip](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/cyclegan-kaggle-tf14.zip) |
+| Remaining eight configurations, with the historical JC baseline/classifier | [kaggle-paper-suite](kaggle-paper-suite) | [Eight individual notebooks](kaggle-paper-suite/kaggle/single-runs), [whole queue](kaggle-paper-suite/kaggle/cyclegan_paper_suite.ipynb) | [cyclegan-paper-suite.zip](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/cyclegan-paper-suite.zip) |
+
+All ten notebooks are also available in [one ZIP](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/kaggle-tf14-notebooks.zip).
+The suite input bundle is byte-identical to the historical upload; source hashes
+match the saved code in all eight completed suite outputs. See
+[verification and provenance](docs/KAGGLE-VERIFICATION.md).
+
+**GPU availability:** Kaggle [retired P100 on 15 September 2026](https://www.kaggle.com/product-announcements/735239).
+These notebooks preserve the original P100 checks and runtime; they stop on a T4
+instead of substituting another environment. The guide includes commands for an
+existing Linux P100 host. This publication does not claim a new GPU training run.
 
 ```bash
 git clone --depth 1 https://github.com/themes12/CycleGAN-Music-Style-Transfer.git
 cd CycleGAN-Music-Style-Transfer
-conda env create -f environment.yml
-conda activate cyclegan-music
+python scripts/verify_kaggle_sources.py
 ```
 
-Download [dataset-use-directly.zip](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/experiments-v1/dataset-use-directly.zip)
-from [the experiment release](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/tag/experiments-v1)
-and place it in the project folder, then run:
-
-```bash
-python scripts/smoke_test.py --archive dataset-use-directly.zip
-```
-
-The dataset is distributed as a release asset; it is not stored in Git.
-The smoke test uses a small subset and smaller networks to verify execution; use the
-guide's full-data commands for actual experiments.
+The root-level `main.py`, `environment.yml`, `requirements*.txt`, and `Dockerfile`
+belong to the separate TF1.15 CPU-tested package. Its [guide](docs/SHARING.md) is
+retained for reference; use the two TF1.4 directories above for the historical
+P100 experiments. The original research description follows.
 
 - Built a CycleGAN-based model to realize music style transfer between different musical domains.
 - Added extra discriminators to regularize generators to achieve clear style transfer and preserve original melody, which made our model learn more high-level features.

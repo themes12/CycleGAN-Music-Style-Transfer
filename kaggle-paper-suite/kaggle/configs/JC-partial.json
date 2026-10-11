@@ -1,0 +1,50 @@
+{
+  "protocol": "native-tf14-paper-selected-nine-v1",
+  "tensorflow_required": "1.4.0",
+  "python_required": "3.5.4",
+  "pair": "JC",
+  "dataset_a": "JC_J",
+  "dataset_b": "JC_C",
+  "genres": [
+    "Jazz",
+    "Classic"
+  ],
+  "model": "partial",
+  "sigma_d": 0.0,
+  "gamma": 1.0,
+  "cycle_loss": "legacy_l1",
+  "seed": 19,
+  "batch_size": 16,
+  "epochs": 30,
+  "classifier_epochs": 30,
+  "decay_start_epoch": 10,
+  "learning_rate": 0.0002,
+  "beta1": 0.5,
+  "beta2": 0.999,
+  "lambda_cycle": 10.0,
+  "ngf": 64,
+  "ndf": 64,
+  "deterministic": false,
+  "checkpoint_every_steps": 100,
+  "report_every_steps": 10,
+  "evaluate_epochs": [
+    20,
+    30
+  ],
+  "classifier_robustness_sigmas": [
+    0.0,
+    0.01,
+    0.1,
+    0.2,
+    0.3,
+    0.5,
+    1.0
+  ],
+  "replay_pool_size": 50,
+  "mixed_source": "pair_training_union",
+  "paper_reference": {
+    "table": "VII",
+    "strength": 0.716,
+    "classifier_accuracy_sigma0": 0.8889
+  }
+}

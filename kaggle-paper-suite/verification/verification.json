@@ -1,0 +1,137 @@
+{
+  "date": "2026-09-09",
+  "unit_tests": {
+    "passed": 13,
+    "command": "python -m unittest discover -s tests -p test_suite.py"
+  },
+  "python_35_syntax": {
+    "passed": true,
+    "files": [
+      "model.py",
+      "module.py",
+      "ops.py",
+      "utils.py",
+      "write_midi.py",
+      "style_classifier.py",
+      "tf_compat.py",
+      "experiment.py",
+      "experiment_metrics.py",
+      "experiment_health.py",
+      "experiment_objectives.py",
+      "suite_plan.py",
+      "suite_data.py",
+      "replay.py",
+      "kaggle/preflight.py"
+    ]
+  },
+  "notebook_cells_compile": true,
+  "native_cpu": {
+    "resume": {
+      "JP-full": {
+        "step": 7,
+        "max_absolute_difference": 0.0,
+        "replay_count": 2,
+        "variables": 524
+      },
+      "JC-partial": {
+        "step": 7,
+        "max_absolute_difference": 0.0,
+        "replay_count": 2,
+        "variables": 524
+      },
+      "CP-base": {
+        "step": 7,
+        "max_absolute_difference": 0.0,
+        "replay_count": null,
+        "variables": 492
+      }
+    },
+    "device": "CPU",
+    "evaluation": {
+      "JP-full": {
+        "labels": [
+          "Jazz",
+          "Pop"
+        ],
+        "phrases_per_direction": 5,
+        "midi_files": 24
+      },
+      "JC-partial": {
+        "labels": [
+          "Jazz",
+          "Classic"
+        ],
+        "phrases_per_direction": 5,
+        "midi_files": 24
+      },
+      "CP-base": {
+        "labels": [
+          "Classic",
+          "Pop"
+        ],
+        "phrases_per_direction": 5,
+        "midi_files": 24
+      }
+    },
+    "runtime": {
+      "cuda_build": true,
+      "tensorflow": "1.4.0",
+      "runtime": "native TensorFlow 1 (not compat.v1)"
+    },
+    "real_data_training": false
+  },
+  "imported_classifier_inference": {
+    "JC_J_test": {
+      "n": 1125,
+      "max_probability_difference_cpu_vs_saved_gpu": 3.516674041748047e-06,
+      "correct": 942
+    },
+    "trained_updates": 0,
+    "JC_C_test": {
+      "n": 1125,
+      "max_probability_difference_cpu_vs_saved_gpu": 6.5267086029052734e-06,
+      "correct": 1066
+    },
+    "device": "CPU"
+  },
+  "native_fixture_settings": {
+    "ngf": 2,
+    "ndf": 2,
+    "batch_size": 2,
+    "train_phrases_per_domain": 8,
+    "test_phrases_per_domain": 5,
+    "resume_comparison": "7 continuous updates versus 3 + resumed 4; all checkpoint variables; warm replay pool"
+  },
+  "limitations": [
+    "No new real-data training performed locally.",
+    "New full-width eight-run queue has not been trained on Kaggle P100.",
+    "Exact CPU fixture resume equality does not guarantee bitwise GPU determinism.",
+    "Original extra-discriminator generator-loss limitation is preserved and documented in KAGGLE.th.md."
+  ],
+  "source_sha256": {
+    "build_bundle.py": "dfd02ced2a4b213033286cd6c201251a13238a02bbe0e4b420f81513d9424a27",
+    "experiment.py": "40f5974345dd147c1a29a118e3c08ebc3fcd1f79e3f35e513eb156fd3426e774",
+    "experiment_data.py": "9bb7cb7b8f489ba4abc904f25ffbf0fc4b13f3c16a2c0caf62b1de3959282b6b",
+    "experiment_health.py": "de9b4f385a91536a611819bf8303ad122c4239863d91d6b71f8e1fbfdef15fa5",
+    "experiment_metrics.py": "da7f3c050c08c58f71a6517bfcfd0061a4fe25f0335c2f2afcffd2163d47459e",
+    "experiment_objectives.py": "3728448434a50a91cd1fc796b80a8a9d54aeccc9ff95bfd145f4817a2306636e",
+    "generate_notebook.py": "c43b9116d72197adedbb5ec227269ff5000ee0e8533c2822248f49770e74217e",
+    "kaggle/bootstrap.py": "a2e7a466c2031c13049eb9e21d657527d44a16be1c077cd1952b319a30cee903",
+    "kaggle/preflight.py": "0c4c652ac43764bda96a0d98e009e302cedd6d65a7259c10cffdbd95fe566005",
+    "kaggle/suite_session.py": "8da036f5e3ff71bae5a9c4ab4bf39ed452f0c7fc1f9fdf336fc5da6cff0ae937",
+    "model.py": "81937ffe2aca0757d13eee558150fd40ac075cdd4ae5b2f3cd4fd04519432d37",
+    "module.py": "72a748d4d89b17d50dbd191011d8813f0c0f41e45d2646917890ff6627823447",
+    "ops.py": "e630678d8da46619a20491d7881928aef1f9e5ef6904507c0f726a291b891c3e",
+    "replay.py": "c54b63c1af37f66b5abb54b4f7079c660dda32810f282733c3e02870dd486e59",
+    "repro_data.py": "e9bb5d5466e873459463db0d27e92c7a121d1632ee979ec4d1f993911e1831b4",
+    "style_classifier.py": "0bd62faad2ea746d1d800aeda2c6846501377231d9519a01f89f9bf697e7ff3c",
+    "suite_data.py": "dd2978edfeeb0215c65034eb544ddd0cc687144236695f50a9e0a1a66ce3e3eb",
+    "suite_plan.py": "3f7f8d81fdd3afe922d1c779beb2b0c69a6fc5dbdcfb770f0340468ed3fc881f",
+    "tests/check_imported_classifier.py": "f4d7498923c5bd87cc0fd7c0e7d87a04cc3cef0bd1f1946b74c63bb77ef3d044",
+    "tests/native_checks.py": "9a17bcf5f949b4dd2f9fb170f83d820a695211fc8ac16e364dae0883c17140ad",
+    "tests/test_suite.py": "bb96db5d8c03068857dc22c0602f31e8885647d024310007245d65a6ab97eada",
+    "tf_compat.py": "2c3222affcb5df940bb054e2597e5a28c0e8c35ebec798eb1072779494f61ca9",
+    "utils.py": "8c1ec2ef9d8e93ea0a69c397b187d72f8bd0269c8e461f2fd9b6946877f92f01",
+    "write_midi.py": "ff6730ad15920972cd5ce1d87ef8ab30b04fc39ba223a31170385a44df30e04d"
+  }
+}

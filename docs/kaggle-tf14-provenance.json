@@ -1,0 +1,146 @@
+{
+  "published": "2026-10-11",
+  "runtime": {
+    "python": "3.5.4",
+    "tensorflow": "1.4.0",
+    "cuda": "8.0",
+    "cudnn": "6.0.21",
+    "gpu": "Tesla P100"
+  },
+  "baseline_source_matches_completed_run": true,
+  "suite_bundle_identical_to_original_release": true,
+  "historical_suite_outputs": [
+    {
+      "archive": "01_JC_partial-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "02_JC_full-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "03_CP_base-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "04_CP_partial-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "05_CP_full-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "06_JP_base-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "07_JP_partial-paper-suite-results.zip",
+      "matching_source_files": 43
+    },
+    {
+      "archive": "08_JP_full-paper-suite-results.zip",
+      "matching_source_files": 43
+    }
+  ],
+  "baseline_data_identity": "b475d9a1000364e99836dc6dee2a0a353561c6b1480039e2944aa193d93f9482",
+  "suite_data_identity": "5d92604eb569b44fa97be1bf4c4372f359ca77d9100584d2426e31c32de2a1fe",
+  "source_sha256": {
+    "kaggle-jc-base/evidence/kaggle-tf14-verification.json": "ec5fe52fbf77d767ab2451f75b26825524c47a7e653e7ea4846cb2ba668dfa91",
+    "kaggle-jc-base/experiment.py": "36d1a9b5a5b79a895b1cefdc0e057a09ead15ee4260238c8ba79eb465182d929",
+    "kaggle-jc-base/experiment_data.py": "9bb7cb7b8f489ba4abc904f25ffbf0fc4b13f3c16a2c0caf62b1de3959282b6b",
+    "kaggle-jc-base/experiment_health.py": "de9b4f385a91536a611819bf8303ad122c4239863d91d6b71f8e1fbfdef15fa5",
+    "kaggle-jc-base/experiment_metrics.py": "da7f3c050c08c58f71a6517bfcfd0061a4fe25f0335c2f2afcffd2163d47459e",
+    "kaggle-jc-base/experiment_objectives.py": "3728448434a50a91cd1fc796b80a8a9d54aeccc9ff95bfd145f4817a2306636e",
+    "kaggle-jc-base/kaggle/bootstrap.py": "a2e7a466c2031c13049eb9e21d657527d44a16be1c077cd1952b319a30cee903",
+    "kaggle-jc-base/kaggle/conda-linux-64.lock": "c52f18870d05b4e02a9c52d8ebc5a9bd262a2bb6f2a4c357c4ec2f4354454117",
+    "kaggle-jc-base/kaggle/config.json": "64bd89e8fa98a74a191aadb7640c4ff72ab41265254eee4520b636af3709b426",
+    "kaggle-jc-base/kaggle/cyclegan_tf14.ipynb": "009496b0a85917785027a6c5ad3395807e5c74dee75a75efaa2f35e82f1a91c4",
+    "kaggle-jc-base/kaggle/pip-bootstrap.lock": "d608da7a87c2a657e6bf92b50947d22597123edbd24e8812236c1bc1e4fe9d9a",
+    "kaggle-jc-base/kaggle/preflight.py": "0c4c652ac43764bda96a0d98e009e302cedd6d65a7259c10cffdbd95fe566005",
+    "kaggle-jc-base/kaggle/requirements-tf14.in": "34d5d175b08fe41a9e67de6533d1d9b5f220c9c46c70ccf8d2309c3a9f92982f",
+    "kaggle-jc-base/kaggle/requirements-tf14.lock": "787a8c9e82e23ba653fd5b31d42dc2ed2e9e4e7cd80528802c391433c4fc52c7",
+    "kaggle-jc-base/kaggle/session.py": "f405425497ec1ddfefb680d6624689e29ebad489ab59869fc7097b54c162be7c",
+    "kaggle-jc-base/KAGGLE.md": "89cb374dc9c4b6527770c33e0aeb3afdb0d35a7c799280fc71acba304a3ffc2d",
+    "kaggle-jc-base/model.py": "81937ffe2aca0757d13eee558150fd40ac075cdd4ae5b2f3cd4fd04519432d37",
+    "kaggle-jc-base/module.py": "72a748d4d89b17d50dbd191011d8813f0c0f41e45d2646917890ff6627823447",
+    "kaggle-jc-base/ops.py": "e630678d8da46619a20491d7881928aef1f9e5ef6904507c0f726a291b891c3e",
+    "kaggle-jc-base/repro_data.py": "e9bb5d5466e873459463db0d27e92c7a121d1632ee979ec4d1f993911e1831b4",
+    "kaggle-jc-base/style_classifier.py": "0bd62faad2ea746d1d800aeda2c6846501377231d9519a01f89f9bf697e7ff3c",
+    "kaggle-jc-base/tf_compat.py": "2c3222affcb5df940bb054e2597e5a28c0e8c35ebec798eb1072779494f61ca9",
+    "kaggle-jc-base/utils.py": "8c1ec2ef9d8e93ea0a69c397b187d72f8bd0269c8e461f2fd9b6946877f92f01",
+    "kaggle-jc-base/write_midi.py": "ff6730ad15920972cd5ce1d87ef8ab30b04fc39ba223a31170385a44df30e04d",
+    "kaggle-jc-base/scripts/build-kaggle-bundle.py": "a65a5d07b24f26d547d787bd9e559c93667c7e981439ce0329a6b8b673cfc574",
+    "kaggle-paper-suite/baseline-provenance.json": "e334777fab6cee84118faa8f640bb1fb3fcfc0e1b7cd788e1ae0b33e315d2b0d",
+    "kaggle-paper-suite/build_bundle.py": "dfd02ced2a4b213033286cd6c201251a13238a02bbe0e4b420f81513d9424a27",
+    "kaggle-paper-suite/experiment.py": "40f5974345dd147c1a29a118e3c08ebc3fcd1f79e3f35e513eb156fd3426e774",
+    "kaggle-paper-suite/experiment_health.py": "de9b4f385a91536a611819bf8303ad122c4239863d91d6b71f8e1fbfdef15fa5",
+    "kaggle-paper-suite/experiment_metrics.py": "da7f3c050c08c58f71a6517bfcfd0061a4fe25f0335c2f2afcffd2163d47459e",
+    "kaggle-paper-suite/experiment_objectives.py": "3728448434a50a91cd1fc796b80a8a9d54aeccc9ff95bfd145f4817a2306636e",
+    "kaggle-paper-suite/generate_notebook.py": "c43b9116d72197adedbb5ec227269ff5000ee0e8533c2822248f49770e74217e",
+    "kaggle-paper-suite/kaggle/bootstrap.py": "a2e7a466c2031c13049eb9e21d657527d44a16be1c077cd1952b319a30cee903",
+    "kaggle-paper-suite/kaggle/conda-linux-64.lock": "c52f18870d05b4e02a9c52d8ebc5a9bd262a2bb6f2a4c357c4ec2f4354454117",
+    "kaggle-paper-suite/kaggle/configs/classifier-CP.json": "179f1aa2fba1f68cf2310a68485e91f1c252133e427c90a07664dbe60d552c6e",
+    "kaggle-paper-suite/kaggle/configs/classifier-JC.json": "9cc9a062c91c65e9796aa26e373c0b3889a5d15f469ef34f2ed7c025660becc9",
+    "kaggle-paper-suite/kaggle/configs/classifier-JP.json": "76e3199dca366c499f979e74425a87a66e05b9b772385a9a3784efa5b51dd6ae",
+    "kaggle-paper-suite/kaggle/configs/CP-base.json": "64faae5d107a89f682e4004246b303a07a9496f0eac5e9b66095d8eff82e4ce3",
+    "kaggle-paper-suite/kaggle/configs/CP-full.json": "c867412515978ac729e3e7376152db708ceba1626b21b7a344b86210808c43c1",
+    "kaggle-paper-suite/kaggle/configs/CP-partial.json": "e2749a3b8eb82bb496b79ead33b19ee76c3663cfd71433b629ebdac99a04d6ee",
+    "kaggle-paper-suite/kaggle/configs/JC-full.json": "47b400dc02a825c742ada4dc4f4a81237942528113e0d45456b65a9825841828",
+    "kaggle-paper-suite/kaggle/configs/JC-partial.json": "fa16b6093628831c5a26a1a642ba22cf1a215529e0fc7fee8522bc451db18066",
+    "kaggle-paper-suite/kaggle/configs/JP-base.json": "8aa26deb12291cbd11a86b9f574e0e15a96b9e69d852365936d711aebcaa9a32",
+    "kaggle-paper-suite/kaggle/configs/JP-full.json": "8e75bf4952691bde513f3b357b7963d0aaf811749468285f13e014eddb0119ef",
+    "kaggle-paper-suite/kaggle/configs/JP-partial.json": "bc25ceeeb573ceacca3701e8246831a6b58f292af808a58d97fc63e518b83882",
+    "kaggle-paper-suite/kaggle/cyclegan_paper_suite.ipynb": "831f4f0ce94547b45b2386c2a182aec74ef046e48015a8aeb427bf98c08bb8b8",
+    "kaggle-paper-suite/kaggle/pip-bootstrap.lock": "d608da7a87c2a657e6bf92b50947d22597123edbd24e8812236c1bc1e4fe9d9a",
+    "kaggle-paper-suite/kaggle/preflight.py": "0c4c652ac43764bda96a0d98e009e302cedd6d65a7259c10cffdbd95fe566005",
+    "kaggle-paper-suite/kaggle/requirements-tf14.in": "34d5d175b08fe41a9e67de6533d1d9b5f220c9c46c70ccf8d2309c3a9f92982f",
+    "kaggle-paper-suite/kaggle/requirements-tf14.lock": "787a8c9e82e23ba653fd5b31d42dc2ed2e9e4e7cd80528802c391433c4fc52c7",
+    "kaggle-paper-suite/kaggle/suite_session.py": "8da036f5e3ff71bae5a9c4ab4bf39ed452f0c7fc1f9fdf336fc5da6cff0ae937",
+    "kaggle-paper-suite/KAGGLE.th.md": "86251fc4516f73add2762f406aa135cb457e439a841939cab100de6e8add7a68",
+    "kaggle-paper-suite/model.py": "81937ffe2aca0757d13eee558150fd40ac075cdd4ae5b2f3cd4fd04519432d37",
+    "kaggle-paper-suite/module.py": "72a748d4d89b17d50dbd191011d8813f0c0f41e45d2646917890ff6627823447",
+    "kaggle-paper-suite/ops.py": "e630678d8da46619a20491d7881928aef1f9e5ef6904507c0f726a291b891c3e",
+    "kaggle-paper-suite/replay.py": "c54b63c1af37f66b5abb54b4f7079c660dda32810f282733c3e02870dd486e59",
+    "kaggle-paper-suite/style_classifier.py": "0bd62faad2ea746d1d800aeda2c6846501377231d9519a01f89f9bf697e7ff3c",
+    "kaggle-paper-suite/suite_data.py": "dd2978edfeeb0215c65034eb544ddd0cc687144236695f50a9e0a1a66ce3e3eb",
+    "kaggle-paper-suite/suite_plan.py": "3f7f8d81fdd3afe922d1c779beb2b0c69a6fc5dbdcfb770f0340468ed3fc881f",
+    "kaggle-paper-suite/tests/check_imported_classifier.py": "f4d7498923c5bd87cc0fd7c0e7d87a04cc3cef0bd1f1946b74c63bb77ef3d044",
+    "kaggle-paper-suite/tests/native_checks.py": "9a17bcf5f949b4dd2f9fb170f83d820a695211fc8ac16e364dae0883c17140ad",
+    "kaggle-paper-suite/tests/test_suite.py": "bb96db5d8c03068857dc22c0602f31e8885647d024310007245d65a6ab97eada",
+    "kaggle-paper-suite/tf_compat.py": "2c3222affcb5df940bb054e2597e5a28c0e8c35ebec798eb1072779494f61ca9",
+    "kaggle-paper-suite/utils.py": "8c1ec2ef9d8e93ea0a69c397b187d72f8bd0269c8e461f2fd9b6946877f92f01",
+    "kaggle-paper-suite/verification/imported-classifier.json": "fae9779a3214f8d6a6f55bd5b39d45a0b2930afe3b90e112bec58b69d96d049e",
+    "kaggle-paper-suite/verification/native-verification.json": "5100af56c12654fb7bc02122beb17f100812d89638fc642e4dedcc86eae1937e",
+    "kaggle-paper-suite/verification/verification.json": "a88ea225b1c29bfbe6cae7bb0a8c13015a627b1203cf38884c271db49ae96e01",
+    "kaggle-paper-suite/write_midi.py": "ff6730ad15920972cd5ce1d87ef8ab30b04fc39ba223a31170385a44df30e04d",
+    "kaggle-paper-suite/generate_single_notebooks.py": "c91c811afb21dbc11831ddf26a7da660b5ae1509eba794892759a5e9ede261a9",
+    "kaggle-paper-suite/SINGLE-RUNS.th.md": "e63c27afee70e5c77c27da148a07c02bdef97c9ea6d45fa4060ac34dd8080264",
+    "kaggle-paper-suite/kaggle/single-runs/01_JC_partial.ipynb": "9ca0191243d4a3e73b39e054c2d4260c4766761fcd802db981dabf2a0ff6b20e",
+    "kaggle-paper-suite/kaggle/single-runs/02_JC_full.ipynb": "0ded0ee6e972daf3f9da003e8a72c59efdc88d24088c14e5043569784139f855",
+    "kaggle-paper-suite/kaggle/single-runs/03_CP_base.ipynb": "81991744c82b764b82424b33785ab880f422c699b7a70292d1aa92c911a8702a",
+    "kaggle-paper-suite/kaggle/single-runs/04_CP_partial.ipynb": "7e5743d93739bd60b081f7f94b5609265501f9e09591c33b1a24b6f6a771a354",
+    "kaggle-paper-suite/kaggle/single-runs/05_CP_full.ipynb": "774588c2b2ff6edfe1cb04fef1aa00d35af98e65829d249fe08cd4da03d7a5f4",
+    "kaggle-paper-suite/kaggle/single-runs/06_JP_base.ipynb": "dccbc170f3d131e40f73e207b1f1ce9d6e5a8fde1cfeaa3d56432decc8a52454",
+    "kaggle-paper-suite/kaggle/single-runs/07_JP_partial.ipynb": "0edc2ace9a96fb092b9d3f48839f639218f6d657f0dc0cb31b1a4e7dacc80313",
+    "kaggle-paper-suite/kaggle/single-runs/08_JP_full.ipynb": "ffa1d5d649f3d14686e2e592756ec886ba149b28ed512368b3cbeddf29217e81"
+  },
+  "release_assets": {
+    "cyclegan-kaggle-tf14.zip": {
+      "sha256": "e0713d42f39d0ee59dd40b46c507e5e74cbaed87c2ced8bc62d7bb2301e3d88e",
+      "bytes": 6026895
+    },
+    "cyclegan-paper-suite.zip": {
+      "sha256": "b00ceb9896899c86b31900be8f386a3a02bfe102e8751425c2f685048b177219",
+      "bytes": 39943546
+    },
+    "kaggle-tf14-notebooks.zip": {
+      "sha256": "1c2d76f743e699d0fa921c654734f2e3d0411a1da6f114656238d49d4f613cc5",
+      "bytes": 32304
+    }
+  },
+  "publication_checks": {
+    "notebooks_compile": 10,
+    "gpu_training_rerun": false
+  }
+}

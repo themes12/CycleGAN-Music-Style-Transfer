@@ -1,0 +1,15 @@
+# Linux x86_64, exact archive URLs and MD5 from conda metadata.
+@EXPLICIT
+https://repo.anaconda.com/pkgs/free/linux-64/certifi-2016.2.28-py35_0.tar.bz2#bf1519a773d0ba0195920c3bf458c159
+https://repo.anaconda.com/pkgs/free/linux-64/cudatoolkit-8.0-3.tar.bz2#71688d1c273fc92388c2b60fdb082cf0
+https://repo.anaconda.com/pkgs/free/linux-64/cudnn-6.0.21-cuda8.0_0.tar.bz2#b17f77b1c638c832fcb7bd137a238a46
+https://repo.anaconda.com/pkgs/free/linux-64/openssl-1.0.2l-0.tar.bz2#4b777ebd155103c6ca3c8abff32a95b6
+https://repo.anaconda.com/pkgs/free/linux-64/pip-9.0.1-py35_1.tar.bz2#bd28c67a3f96b252d4ffefb17e03b4f7
+https://repo.anaconda.com/pkgs/free/linux-64/python-3.5.4-0.tar.bz2#9c949f2b52e4d1d6faac202f3f322bfe
+https://repo.anaconda.com/pkgs/free/linux-64/readline-6.2-2.tar.bz2#d050607fb2934282470d06872e0e6cce
+https://repo.anaconda.com/pkgs/free/linux-64/setuptools-36.4.0-py35_1.tar.bz2#b63cd3db6c9e3228ba8f566417291b97
+https://repo.anaconda.com/pkgs/free/linux-64/sqlite-3.13.0-0.tar.bz2#ceb2d63b0dc2ec8a2e1da9378f07ab98
+https://repo.anaconda.com/pkgs/free/linux-64/tk-8.5.18-0.tar.bz2#902f0fd689a01a835c9e69aefbe58fdd
+https://repo.anaconda.com/pkgs/free/linux-64/wheel-0.29.0-py35_0.tar.bz2#a489d3c609c001af399b41e1bd2eedeb
+https://repo.anaconda.com/pkgs/free/linux-64/xz-5.2.3-0.tar.bz2#585458787b315ac1e5fb3a1ee71cad75
+https://repo.anaconda.com/pkgs/free/linux-64/zlib-1.2.11-0.tar.bz2#34b5be58250b2f53176640a8ae8723a7
