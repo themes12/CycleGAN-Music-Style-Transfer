@@ -74,7 +74,7 @@ JC partial/full ใช้ classifier จาก baseline เดิมที่อ
 
 ## ใช้ runner เดิมบน Linux x86-64 ที่มี P100
 
-ถ้าจะเช่าเครื่องเอง ดู [คู่มือ Vast.ai ตั้งแต่เลือกเครื่องจนถึงดาวน์โหลดผล](VAST.md)
+ถ้าจะเช่าเครื่องเอง ดู [รันบน Vast ผ่านเว็บ: อัปโหลด notebook แล้วกด Run All](VAST.md)
 
 ต้องมี Python สมัยใหม่ (3.9 ขึ้นไป) สำหรับ supervisor, NVIDIA driver ที่ใช้งานได้ และ Internet
 ตัวติดตั้งจะสร้าง Python 3.5.4 / TF1.4 พร้อม CUDA/cuDNN ใน environment แยก
