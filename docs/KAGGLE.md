@@ -1,5 +1,8 @@
 # แชร์ชุดทดลอง TF1.4 ที่ใช้บน Kaggle P100 จริง
 
+**เริ่มรันผ่านเว็บได้ที่ [คู่มือ Vast](VAST.md)** — ใช้ notebook ไฟล์เดียว ซึ่งดาวน์โหลดข้อมูลให้เอง
+หน้านี้เก็บรายละเอียดการทดลองและวิธี Kaggle เดิม ดู [หน้าที่ของไฟล์ใน repo](FILES.md) สำหรับการดูแลโค้ด
+
 ชุดนี้ใช้ **Python 3.5.4 / TensorFlow 1.4.0 / CUDA 8.0 / cuDNN 6.0.21 / Tesla P100 16 GB**
 ตรงกับการทดลองเดิม: seed 19, batch 16, GAN 30 epochs, classifier 30 epochs และประเมิน GAN ที่ epoch 20/30
 Notebook ใช้ Python สมัยใหม่เรียก subprocess ของ Python 3.5.4 ที่ติดตั้งแยกไว้

@@ -16,4 +16,6 @@
 
 Notebook นี้เรียกชุด experiment เดิมจาก Kaggle โดยอัตโนมัติ ยังไม่ได้ทดลองรันบนเครื่อง Vast จริง
 
+ถ้าต้องการดูโครงสร้าง repo: [ไฟล์ไหนยังใช้อยู่](FILES.md)
+
 อ้างอิง: [Jupyter ผ่านเว็บ](https://docs.vast.ai/guides/instances/connect/jupyter) · [เลือก template](https://docs.vast.ai/guides/instances/choosing/templates) · [การจัดการเครื่องและค่าใช้จ่าย](https://docs.vast.ai/guides/instances/manage-instances)

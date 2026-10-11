@@ -7,10 +7,12 @@ shares the **native TensorFlow 1.4 experiment code actually used on Kaggle Tesla
 Python **3.5.4**, CUDA **8.0**, cuDNN **6.0.21**, 30 epochs, seed 19, batch 16,
 and evaluation at epochs 20 and 30.
 
-**Start with [the Kaggle sharing guide (Thai)](docs/KAGGLE.md)** and download
-[the complete TF1.4 release](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/tag/kaggle-tf14-v1).
+**Start here: [run on Vast through your browser (Thai)](docs/VAST.md).**
+[Download the notebook](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/Vast_P100.ipynb), upload it to Jupyter on a P100 instance, and click **Run All Cells**.
+It installs the runtime and downloads the data automatically; the default experiment is JC-base.
 
-**Vast.ai, through your browser:** [download the notebook](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/Vast_P100.ipynb), upload it to Jupyter on a P100 instance, and click **Run All Cells**. It installs the runtime and downloads the data automatically. [Short guide (Thai)](docs/VAST.md).
+See [which files are used (Thai)](docs/FILES.md) for the current notebook, its supporting code, and the separate older package.
+The [Kaggle experiment reference](docs/KAGGLE.md) documents all configurations and the original workflow.
 
 | Experiment | Source | Notebook | Input bundle |
 |---|---|---|---|
@@ -27,16 +29,15 @@ These notebooks preserve the original P100 checks and runtime; they stop on a T4
 instead of substituting another environment. The guide includes commands for an
 existing Linux P100 host. This publication does not claim a new GPU training run.
 
-```bash
-git clone --depth 1 https://github.com/themes12/CycleGAN-Music-Style-Transfer.git
-cd CycleGAN-Music-Style-Transfer
-python scripts/verify_kaggle_sources.py
-```
-
 The root-level `main.py`, `environment.yml`, `requirements*.txt`, and `Dockerfile`
 belong to the separate TF1.15 CPU-tested package. Its [guide](docs/SHARING.md) is
 retained for reference; use the two TF1.4 directories above for the historical
-P100 experiments. The original research description follows.
+P100 experiments.
+
+## Original project notes
+
+The research description and original commands below are retained as historical reference.
+For the current Vast workflow, use [the browser notebook guide](docs/VAST.md).
 
 - Built a CycleGAN-based model to realize music style transfer between different musical domains.
 - Added extra discriminators to regularize generators to achieve clear style transfer and preserve original melody, which made our model learn more high-level features.
