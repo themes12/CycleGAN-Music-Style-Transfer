@@ -10,6 +10,8 @@ and evaluation at epochs 20 and 30.
 **Start with [the Kaggle sharing guide (Thai)](docs/KAGGLE.md)** and download
 [the complete TF1.4 release](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/tag/kaggle-tf14-v1).
 
+For a rented Linux P100 host, follow [the Vast.ai setup, training, resume and download guide (Thai)](docs/VAST.md).
+
 | Experiment | Source | Notebook | Input bundle |
 |---|---|---|---|
 | JC base, trained from scratch | [kaggle-jc-base](kaggle-jc-base) | [JC base notebook](kaggle-jc-base/kaggle/cyclegan_tf14.ipynb) | [cyclegan-kaggle-tf14.zip](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/cyclegan-kaggle-tf14.zip) |
