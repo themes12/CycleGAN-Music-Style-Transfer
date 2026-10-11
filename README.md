@@ -10,6 +10,8 @@ and evaluation at epochs 20 and 30.
 **Start here: [run on Vast through your browser (Thai)](docs/VAST.md).**
 [Download the notebook](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/kaggle-tf14-v1/Vast_P100.ipynb), upload it to Jupyter on a P100 instance, and click **Run All Cells**.
 It installs the runtime and downloads the data automatically; the default experiment is JC-base.
+To try custom hyperparameters, edit `SETTINGS` in the first cell, then **Run All Cells**.
+For example, `SETTINGS = {"epochs": 50, "batch_size": 8, "sigma_d": 0.2}` starts a separate custom run with its own classifier. [Custom settings (Thai)](docs/VAST.md#ปรับ-settings-เอง).
 
 See [which files are used (Thai)](docs/FILES.md) for the current notebook, its supporting code, and the separate older package.
 The [Kaggle experiment reference](docs/KAGGLE.md) documents all configurations and the original workflow.

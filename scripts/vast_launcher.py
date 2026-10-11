@@ -6,6 +6,7 @@ import platform
 import subprocess
 import sys
 import time
+import types
 import urllib.request
 import zipfile
 
@@ -89,7 +90,8 @@ def progress_text(root):
     if phase in ("gan", "classifier"):
         detail = read_status(root / status.get("stage", phase) / "status.json")
         if "epoch" in detail:
-            label += " · epoch " + str(detail["epoch"]) + "/30"
+            total = status.get("classifier_epochs" if phase == "classifier" else "epochs", 30)
+            label += " · epoch " + str(detail["epoch"]) + "/" + str(total)
     return label
 
 
@@ -113,10 +115,36 @@ def execute(command, log, message, update, lock_fd, root=None):
         raise RuntimeError("งานหยุดระหว่างรัน รายละเอียดอยู่ใน " + log.name)
 
 
-def training_command(experiment, workspace, bundle, prefix):
+def load_custom(source=None):
+    if source is None:
+        source = Path(__file__).with_name("vast_custom.py").read_text(encoding="utf-8")
+    module = types.ModuleType("vast_custom")
+    exec(compile(source, "vast_custom.py", "exec"), module.__dict__)
+    return module, source
+
+
+def training_command(experiment, workspace, bundle, prefix, settings=None, custom_source=None):
     if experiment not in EXPERIMENTS:
         raise ValueError("ชื่อ experiment ไม่ถูกต้อง: " + experiment)
     base = experiment == "JC-base"
+    if settings:
+        custom, source = load_custom(custom_source)
+        request = dict(experiment=experiment, settings=settings,
+                       config=custom.configuration(bundle, experiment, settings),
+                       bundle_sha256=ASSETS["base" if base else "suite"][1],
+                       runner_sha256=hashlib.sha256(source.encode("utf-8")).hexdigest())
+        identifier = custom.request_id(request)
+        directory = workspace / "results/custom" / (experiment + "-" + identifier)
+        directory.mkdir(parents=True, exist_ok=True)
+        runner = directory / "custom-session.py"
+        runner.write_bytes(source.encode("utf-8"))
+        request_path = directory / "request.json"
+        request_path.write_text(json.dumps(request, indent=2), encoding="utf-8")
+        root = directory / "run"
+        archive = directory / (directory.name + "-results.zip")
+        return ([sys.executable, "-u", str(runner), "--bundle", str(bundle),
+                 "--python", str(prefix / "bin/python"), "--output", str(root),
+                 "--request", str(request_path), "--seconds", "36000"], root, archive)
     root = workspace / "results" / ("base" if base else "suite") / "run"
     script = "session.py" if base else "suite_session.py"
     archive = root.parent / ("tf14-results.zip" if base else "paper-suite-results.zip")
@@ -128,7 +156,7 @@ def training_command(experiment, workspace, bundle, prefix):
     return command, root, archive
 
 
-def start(experiment):
+def start(experiment, settings=None, custom_source=None):
     from IPython.display import FileLink, display
     notice = display("กำลังเตรียม " + experiment, display_id=True)
     update = notice.update
@@ -143,6 +171,9 @@ def start(experiment):
             display(FileLink(path.relative_to(Path.cwd().resolve()).as_posix()))
 
     try:
+        settings = {} if settings is None else settings
+        custom, custom_source = load_custom(custom_source)
+        custom.validate_settings(settings)
         if experiment not in EXPERIMENTS:
             raise ValueError("เลือกชื่อ experiment จากรายการด้านบน")
         if platform.system() != "Linux" or platform.machine() != "x86_64":
@@ -160,12 +191,12 @@ def start(experiment):
             update("กำลังดาวน์โหลดโค้ดและข้อมูล " + experiment)
             bundle = prepare_bundle(workspace, "base" if experiment == "JC-base" else "suite")
             prefix = environment_path(workspace, bundle)
+            command, root, archive = training_command(experiment, workspace, bundle, prefix, settings, custom_source)
             log = workspace / "setup.log"
             execute([sys.executable, str(bundle / "kaggle/bootstrap.py"), "--prefix", str(prefix)],
                     log, "กำลังติดตั้ง ครั้งแรกอาจใช้หลายนาที", update, lock.fileno())
-            command, root, archive = training_command(experiment, workspace, bundle, prefix)
             root.parent.mkdir(parents=True, exist_ok=True)
-            log = workspace / (experiment + ".log")
+            log = root.parent / "session.log"
             execute(command, log, "กำลังเริ่มงาน", update, lock.fileno(), root)
             status = read_status(root / "session-status.json")
             if status.get("state") in ("complete", "selection_complete"):

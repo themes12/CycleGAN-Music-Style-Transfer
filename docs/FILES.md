@@ -12,23 +12,27 @@ Notebook ดาวน์โหลดโค้ดและข้อมูลท�
 |---|---|
 | [notebooks/Vast_P100.ipynb](../notebooks/Vast_P100.ipynb) | ไฟล์ที่อัปโหลดเข้า Jupyter แล้วกด Run All |
 | [scripts/vast_launcher.py](../scripts/vast_launcher.py) | ต้นฉบับโค้ดดาวน์โหลด ติดตั้ง และเรียก runner ซึ่งฝังอยู่ใน notebook แล้ว ผู้รันไม่ต้องอัปโหลดเพิ่ม |
+| [scripts/vast_custom.py](../scripts/vast_custom.py) | ตัวรัน custom settings คำนวณจำนวน steps/epochs และจัดผลแยกจาก preset; ฝังอยู่ใน notebook เช่นกัน |
 | [scripts/build_vast_notebook.py](../scripts/build_vast_notebook.py) | สร้าง notebook จาก launcher ใช้เมื่อผู้ดูแลแก้ notebook |
 | [kaggle-jc-base/](../kaggle-jc-base) | ต้นฉบับ TF1.4 สำหรับ JC-base |
 | [kaggle-paper-suite/](../kaggle-paper-suite) | ต้นฉบับ TF1.4 สำหรับอีก 8 configurations และเครื่องมือจัดชุดทดลอง |
 | [docs/VAST.md](VAST.md) | วิธีรันผ่านเว็บปัจจุบัน |
 
-ตอนรันจริง notebook ใช้ไฟล์ใน **GitHub Release `kaggle-tf14-v1`**:
+ตอนรันจริง notebook ดาวน์โหลดโค้ดโมเดลและข้อมูลจาก **GitHub Release `kaggle-tf14-v1`** สำหรับ preset (`SETTINGS = {}`):
 
 - `JC-base` ดาวน์โหลด `cyclegan-kaggle-tf14.zip` แล้วเรียก `kaggle/bootstrap.py` → `kaggle/session.py` → `experiment.py`
 - อีก 8 configurations ดาวน์โหลด `cyclegan-paper-suite.zip` แล้วเรียก `kaggle/bootstrap.py` → `kaggle/suite_session.py` → `experiment.py`
 - Runner ใช้ config, runtime locks, `preflight.py`, โมเดล, classifier, ตัวอ่านข้อมูล และตัวประเมินผลจาก bundle เดียวกัน
 
+เมื่อใส่ custom `SETTINGS` จะใช้ `vast_custom.py` จัดการรอบเทรน/ประเมินผลแทนคิว preset
+ยังเรียก `experiment.py` เดิมจาก bundle โดยใช้ config ใหม่ และสร้าง classifier ใหม่ใน output ของ custom run
+
 ชื่อ `kaggle-` จึงไม่ได้หมายความว่าเลิกใช้แล้ว โค้ดชุดนี้ยังเป็นตัวที่รันบน Vast
 ไฟล์ชื่อซ้ำอย่าง `model.py` ในสองโฟลเดอร์เป็น snapshot ของแต่ละชุด ไม่ควรรวมกับไฟล์ชื่อเดียวกันที่ราก repo
 
 **การแก้โค้ดใน repo ไม่เปลี่ยน release ZIP ที่ notebook ดาวน์โหลดโดยอัตโนมัติ**
-หากจะเปลี่ยน experiment ต้องสร้างและเผยแพร่ bundle รุ่นใหม่พร้อมแก้ URL/checksum ใน launcher แล้วสร้าง notebook ใหม่
-ถ้าแก้เฉพาะ launcher ต้องสร้าง notebook ใหม่และอัปโหลด notebook ฉบับใหม่ด้วย
+การปรับ hyperparameters ทำผ่าน `SETTINGS` ได้ ส่วนการแก้ตัวโมเดลหรือข้อมูลใน snapshot ต้องสร้างและเผยแพร่ bundle รุ่นใหม่พร้อมแก้ URL/checksum ใน launcher แล้วสร้าง notebook ใหม่
+ถ้าแก้ launcher หรือ custom runner ต้องสร้าง notebook ใหม่และอัปโหลด notebook ฉบับใหม่ด้วย
 
 ## ยังใช้ดูแลหรืออ้างอิงชุด TF1.4
 
@@ -41,6 +45,7 @@ Notebook ดาวน์โหลดโค้ดและข้อมูลท�
 | `kaggle-paper-suite/generate_notebook.py`, `generate_single_notebooks.py` | สร้าง notebook แบบ Kaggle เดิม |
 | Notebook ใน `kaggle-jc-base/kaggle/` และ `kaggle-paper-suite/kaggle/` รวม `single-runs/` | ทางเข้ารันแบบ Kaggle เดิม ไม่ได้ถูกเปิดโดย notebook Vast |
 | `kaggle-paper-suite/tests/`, `verification/`, `baseline-provenance.json`, `kaggle-jc-base/evidence/` | เครื่องมือตรวจและหลักฐานประกอบ snapshot |
+| [tests/test_vast_custom.py](../tests/test_vast_custom.py) | ตรวจ custom settings, การแยกผล, checkpoint และ resume โดยจำลอง engine; ไม่ใช่ผลรัน GPU |
 | README และคู่มือเดิมภายในสองโฟลเดอร์ TF1.4, `requirements-tf14.in` | เอกสารและต้นฉบับรายการ dependencies; ตอนติดตั้งใช้ไฟล์ `.lock` |
 
 ไฟล์บางรายการไม่ได้ถูก execute ระหว่าง train แต่ยังอยู่ใน manifest ของชุดเดิม จึงเก็บไว้เพื่อรักษา snapshot
@@ -68,4 +73,7 @@ Notebook ดาวน์โหลดโค้ดและข้อมูลท�
 - `Dataset (use directly).zip` เป็นข้อมูลต้นฉบับในเครื่อง ใช้สร้าง bundle ใหม่ได้ Notebook Vast ใช้ข้อมูลใน release ZIP แทน
 - เมื่อรัน notebook จะเกิด `cyclegan-vast/` ข้าง notebook ภายในมี environment, ข้อมูล, logs และ `results/`; **ผลและ checkpoint ในนี้ต้องเก็บไว้ถ้าจะทำงานต่อ**
 
-รอบนี้เป็นการสำรวจและจัดเอกสาร ยังไม่ได้ลบหรือย้ายไฟล์
+ผล preset อยู่ใน `results/base/` หรือ `results/suite/` ส่วน custom อยู่ใน `results/custom/<experiment>-<settings-id>/`
+โฟลเดอร์ `cyclegan-vast/` ถูกตัดออกจาก Git และ Docker build context เพื่อไม่รวมข้อมูลและ checkpoint ไปกับ source
+
+ไฟล์ชุดเดิมยังเก็บอยู่ ไม่ได้ลบหรือย้าย
