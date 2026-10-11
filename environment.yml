@@ -1,0 +1,10 @@
+name: cyclegan-music
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7.9
+  - pip=23.3.2
+  - pip:
+      - setuptools==59.8.0
+      - wheel==0.42.0
+      - -r requirements-lock.txt

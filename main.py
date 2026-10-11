@@ -1,72 +1,121 @@
 import argparse
 import os
-import tensorflow as tf
-from model import cyclegan
-from style_classifier import Classifer
-tf.set_random_seed(19)
-os.environ["CUDA_VISIBLE_DEVICES"] = os.environ['SGE_GPU']
+import random
 
-parser = argparse.ArgumentParser(description='')
-parser.add_argument('--dataset_dir', dest='dataset_dir', default='JAZZ2ROCK', help='path of the dataset')
-parser.add_argument('--dataset_A_dir', dest='dataset_A_dir', default='JC_J', help='path of the dataset of domain A')
-parser.add_argument('--dataset_B_dir', dest='dataset_B_dir', default='JC_C', help='path of the dataset of domain B')
-parser.add_argument('--epoch', dest='epoch', type=int, default=100, help='# of epoch')
-parser.add_argument('--epoch_step', dest='epoch_step', type=int, default=10, help='# of epoch to decay lr')
-parser.add_argument('--batch_size', dest='batch_size', type=int, default=16, help='# images in batch')
-parser.add_argument('--train_size', dest='train_size', type=int, default=1e8, help='# images used to train')
-parser.add_argument('--load_size', dest='load_size', type=int, default=286, help='scale images to this size')
-parser.add_argument('--fine_size', dest='fine_size', type=int, default=128, help='then crop to this size')
-parser.add_argument('--time_step', dest='time_step', type=int, default=64, help='time step of pianoroll')
-parser.add_argument('--pitch_range', dest='pitch_range', type=int, default=84, help='pitch range of pianoroll')
-parser.add_argument('--ngf', dest='ngf', type=int, default=64, help='# of gen filters in first conv layer')
-parser.add_argument('--ndf', dest='ndf', type=int, default=64, help='# of discri filters in first conv layer')
-parser.add_argument('--input_nc', dest='input_nc', type=int, default=1, help='# of input image channels')
-parser.add_argument('--output_nc', dest='output_nc', type=int, default=1, help='# of output image channels')
-parser.add_argument('--lr', dest='lr', type=float, default=0.0002, help='initial learning rate for adam')
-parser.add_argument('--beta1', dest='beta1', type=float, default=0.5, help='momentum term of adam')
-parser.add_argument('--which_direction', dest='which_direction', default='AtoB', help='AtoB or BtoA')
-parser.add_argument('--phase', dest='phase', default='train', help='train, test')
-parser.add_argument('--save_freq', dest='save_freq', type=int, default=1000, help='save a model every save_freq iterations')
-parser.add_argument('--print_freq', dest='print_freq', type=int, default=100, help='print the debug information every print_freq iterations')
-parser.add_argument('--continue_train', dest='continue_train', type=bool, default=False, help='if continue training, load the latest model: 1: true, 0: false')
-parser.add_argument('--checkpoint_dir', dest='checkpoint_dir', default='./checkpoint', help='models are saved here')
-parser.add_argument('--sample_dir', dest='sample_dir', default='./samples', help='sample are saved here')
-parser.add_argument('--test_dir', dest='test_dir', default='./test', help='test sample are saved here')
-parser.add_argument('--log_dir', dest='log_dir', default='./log', help='logs are saved here')
-parser.add_argument('--L1_lambda', dest='L1_lambda', type=float, default=10.0, help='weight on L1 term in objective')
-parser.add_argument('--gamma', dest='gamma', type=float, default=1.0, help='weight of extra discriminators')
-parser.add_argument('--use_midi_G', dest='use_midi_G', type=bool, default=False, help='select generator for midinet')
-parser.add_argument('--use_midi_D', dest='use_midi_D', type=bool, default=False, help='select disciminator for midinet')
-parser.add_argument('--use_lsgan', dest='use_lsgan', type=bool, default=False, help='gan loss defined in lsgan')
-parser.add_argument('--max_size', dest='max_size', type=int, default=50, help='max size of image pool, 0 means do not use image pool')
-parser.add_argument('--sigma_c', dest='sigma_c', type=float, default=1.0, help='sigma of gaussian noise of classifiers')
-parser.add_argument('--sigma_d', dest='sigma_d', type=float, default=1.0, help='sigma of gaussian noise of discriminators')
-parser.add_argument('--model', dest='model', default='base', help='three different models, base, partial, full')
-parser.add_argument('--type', dest='type', default='cyclegan', help='cyclegan or classifier')
-
-args = parser.parse_args()
+from experiment import configure_device, safe_name, update_metadata, utc_now, write_metadata
 
 
-def main(_):
-    if not os.path.exists(args.checkpoint_dir):
-        os.makedirs(args.checkpoint_dir)
-    if not os.path.exists(args.sample_dir):
-        os.makedirs(args.sample_dir)
-    if not os.path.exists(args.test_dir):
-        os.makedirs(args.test_dir)
+def positive_int(value):
+    result = int(value)
+    if result < 1:
+        raise argparse.ArgumentTypeError('must be a positive integer')
+    return result
 
-    tfconfig = tf.ConfigProto(allow_soft_placement=True)
-    tfconfig.gpu_options.allow_growth = True
-    with tf.Session(config=tfconfig) as sess:
 
-        if args.type == 'cyclegan':
-            model = cyclegan(sess, args)
+def boolean(value):
+    if value.lower() in ('true', '1', 'yes'):
+        return True
+    if value.lower() in ('false', '0', 'no'):
+        return False
+    raise argparse.ArgumentTypeError('use true or false')
+
+
+def name(value):
+    try:
+        return safe_name(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError(str(error))
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(description='CycleGAN symbolic music experiments (TensorFlow 1).')
+    parser.add_argument('--dataset_dir', default='JAZZ2ROCK', help='legacy option; use --data_root')
+    parser.add_argument('--data_root', default='./datasets', help='directory containing genre train/test folders')
+    parser.add_argument('--dataset_A_dir', type=name, default='JC_J', help='domain A folder under data_root')
+    parser.add_argument('--dataset_B_dir', type=name, default='JC_C', help='domain B folder under data_root')
+    parser.add_argument('--run_id', type=name, default='default', help='stable experiment name shared by train and test')
+    parser.add_argument('--seed', type=int, default=19, help='Python, NumPy and TensorFlow random seed')
+    parser.add_argument('--device', default='auto', help='auto, cpu, or GPU indices such as 0')
+    parser.add_argument('--num_threads', type=positive_int, default=1, help='TensorFlow CPU worker threads')
+    parser.add_argument('--epoch', type=positive_int, default=100)
+    parser.add_argument('--epoch_step', type=int, default=10, help='epoch at which learning-rate decay starts')
+    parser.add_argument('--batch_size', type=positive_int, default=16)
+    parser.add_argument('--train_size', type=positive_int, default=100000000, help='maximum training phrases per domain per epoch')
+    parser.add_argument('--test_size', type=positive_int, default=None, help='maximum test phrases per domain (default: all)')
+    parser.add_argument('--load_size', type=positive_int, default=286)
+    parser.add_argument('--fine_size', type=positive_int, default=128)
+    parser.add_argument('--time_step', type=positive_int, default=64)
+    parser.add_argument('--pitch_range', type=positive_int, default=84)
+    parser.add_argument('--ngf', type=positive_int, default=64)
+    parser.add_argument('--ndf', type=positive_int, default=64)
+    parser.add_argument('--input_nc', type=positive_int, default=1)
+    parser.add_argument('--output_nc', type=positive_int, default=1)
+    parser.add_argument('--lr', type=float, default=0.0002)
+    parser.add_argument('--beta1', type=float, default=0.5)
+    parser.add_argument('--which_direction', choices=('AtoB', 'BtoA'), default='AtoB')
+    parser.add_argument('--phase', choices=('train', 'test'), default='train')
+    parser.add_argument('--save_freq', type=positive_int, default=1000)
+    parser.add_argument('--print_freq', type=positive_int, default=100, help='generate training samples every N updates')
+    parser.add_argument('--continue_train', type=boolean, nargs='?', const=True, default=False)
+    parser.add_argument('--checkpoint_dir', default='./checkpoint')
+    parser.add_argument('--sample_dir', default='./samples')
+    parser.add_argument('--test_dir', default='./test')
+    parser.add_argument('--log_dir', default='./logs')
+    parser.add_argument('--L1_lambda', type=float, default=10.0)
+    parser.add_argument('--gamma', type=float, default=1.0)
+    for option in ('use_midi_G', 'use_midi_D', 'use_lsgan'):
+        parser.add_argument('--' + option, type=boolean, nargs='?', const=True, default=False)
+    parser.add_argument('--max_size', type=int, default=50)
+    parser.add_argument('--sigma_c', type=float, default=1.0)
+    parser.add_argument('--sigma_d', type=float, default=1.0)
+    parser.add_argument('--model', choices=('base', 'partial', 'full'), default='base')
+    parser.add_argument('--type', choices=('cyclegan', 'classifier'), default='cyclegan')
+    return parser
+
+
+def main(argv=None):
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if not 0 <= args.seed < 2**32:
+        parser.error('--seed must be between 0 and 4294967295')
+    if args.epoch_step < 0 or args.sigma_c < 0 or args.sigma_d < 0:
+        parser.error('epoch_step and noise sigmas must be nonnegative')
+    try:
+        configure_device(args.device)
+    except ValueError as error:
+        parser.error(str(error))
+
+    import numpy as np
+    import tensorflow as tf
+    if not tf.__version__.startswith('1.'):
+        raise RuntimeError('This model requires TensorFlow 1. Use the Docker image or environment.yml.')
+    from model import cyclegan
+    from style_classifier import Classifer
+
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    tf.set_random_seed(args.seed)
+    for directory in (args.checkpoint_dir, args.sample_dir, args.test_dir, args.log_dir):
+        os.makedirs(directory, exist_ok=True)
+    path, record = write_metadata(args, tf.__version__)
+    config = tf.ConfigProto(allow_soft_placement=True,
+                           intra_op_parallelism_threads=args.num_threads,
+                           inter_op_parallelism_threads=args.num_threads)
+    config.gpu_options.allow_growth = True
+    try:
+        with tf.Session(config=config) as session:
+            model = cyclegan(session, args) if args.type == 'cyclegan' else Classifer(session, args)
             model.train(args) if args.phase == 'train' else model.test(args)
-
-        if args.type == 'classifier':
-            classifier = Classifer(sess, args)
-            classifier.train(args) if args.phase == 'train' else classifier.test(args)
+        record['status'] = 'completed'
+    except Exception as error:
+        record['status'] = 'failed'
+        record['error'] = str(error)
+        raise
+    finally:
+        record['finished_at'] = utc_now()
+        update_metadata(path, record)
+        print('Experiment metadata:', path)
 
 
 if __name__ == '__main__':
-    tf.app.run()
+    main()

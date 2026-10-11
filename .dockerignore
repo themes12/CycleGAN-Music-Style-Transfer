@@ -1,0 +1,14 @@
+.git
+__pycache__
+*.pyc
+.venv
+.env
+datasets
+datasets_smoke
+checkpoint
+samples
+test
+log
+logs
+dist
+*.zip

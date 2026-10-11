@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+datasets/
+datasets_smoke/
+checkpoint/
+samples/
+test/
+log/
+logs/
+dist/
+*.zip
+.pytest_cache/

@@ -1,5 +1,35 @@
 # Symbolic Music Genre Transfer with CycleGAN
 
+## Run and share experiments
+
+This fork of [Sumu Zhao's original project](https://github.com/sumuzhao/CycleGAN-Music-Style-Transfer)
+adds a pinned environment and a tested workflow for sharing experiments.
+
+For a runnable copy with a pinned Python 3.7 / TensorFlow 1.15 environment,
+dataset preparation, a train/test pipeline and a real smoke test, start with
+[the sharing guide (Thai)](docs/SHARING.md). The original research description
+and commands remain below. Use `--run_id` to name experiments and load their
+checkpoints on any day.
+
+```bash
+git clone --depth 1 https://github.com/themes12/CycleGAN-Music-Style-Transfer.git
+cd CycleGAN-Music-Style-Transfer
+conda env create -f environment.yml
+conda activate cyclegan-music
+```
+
+Download [dataset-use-directly.zip](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/download/experiments-v1/dataset-use-directly.zip)
+from [the experiment release](https://github.com/themes12/CycleGAN-Music-Style-Transfer/releases/tag/experiments-v1)
+and place it in the project folder, then run:
+
+```bash
+python scripts/smoke_test.py --archive dataset-use-directly.zip
+```
+
+The dataset is distributed as a release asset; it is not stored in Git.
+The smoke test uses a small subset and smaller networks to verify execution; use the
+guide's full-data commands for actual experiments.
+
 - Built a CycleGAN-based model to realize music style transfer between different musical domains.
 - Added extra discriminators to regularize generators to achieve clear style transfer and preserve original melody, which made our model learn more high-level features.
 - Trained several genre classifiers separately, and combined them with subjective judgement to have more convincing evaluations.

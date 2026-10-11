@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import tensorflow as tf
 from random import shuffle
@@ -6,7 +7,7 @@ from module import *
 from ops import *
 from utils import *
 from glob import glob
-os.environ["CUDA_VISIBLE_DEVICES"] = os.environ['SGE_GPU']
+from experiment import piano_roll_files
 
 
 class Classifer(object):
@@ -16,6 +17,8 @@ class Classifer(object):
         self.dataset_A_dir = args.dataset_A_dir
         self.dataset_B_dir = args.dataset_B_dir
         self.sample_dir = args.sample_dir
+        self.data_root = args.data_root
+        self.log_dir = args.log_dir
         self.batch_size = args.batch_size
         self.image_size = args.fine_size  # cropped size
         self.time_step = args.time_step
@@ -42,7 +45,7 @@ class Classifer(object):
                                       args.output_nc,
                                       args.phase == 'train'))
         self._build_model()
-        self.now_datetime = get_now_datetime()
+        self.now_datetime = args.run_id
         self.saver = tf.train.Saver()
 
     def _build_model(self):
@@ -84,20 +87,28 @@ class Classifer(object):
 
         # Optimizer
         self.d_optim = tf.train.AdamOptimizer(self.lr, beta1=args.beta1).minimize(self.d_loss, var_list=self.d_vars)
+        self.saver = tf.train.Saver()
 
         init_op = tf.global_variables_initializer()
         self.sess.run(init_op)
 
+        if args.continue_train and not self.load(args.checkpoint_dir):
+            raise FileNotFoundError('No classifier checkpoint for run_id {}'.format(args.run_id))
+
         # log path
-        log_dir = './logs/classifier_{}2{}_{}_{}'.format(self.dataset_A_dir, self.dataset_B_dir, self.now_datetime,
-                                                         str(self.sigma_c))
+        log_dir = os.path.join(self.log_dir, 'classifier_{}2{}_{}_{}'.format(
+            self.dataset_A_dir, self.dataset_B_dir, self.now_datetime, self.sigma_c))
         self.writer = tf.summary.FileWriter(log_dir, self.sess.graph)
         counter = 1
 
         # create training list (origin data with corresponding label)
         # Label for A is (1, 0), for B is (0, 1)
-        dataA = glob('./datasets/{}/train/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/train/*.*'.format(self.dataset_B_dir))
+        dataA = piano_roll_files(self.data_root, self.dataset_A_dir, 'train')[:args.train_size]
+        dataB = piano_roll_files(self.data_root, self.dataset_B_dir, 'train')[:args.train_size]
+        size = min(len(dataA), len(dataB))
+        dataA, dataB = dataA[:size], dataB[:size]
+        if len(dataA) + len(dataB) < self.batch_size:
+            raise ValueError('The classifier needs at least batch_size training phrases.')
         labelA = [(1.0, 0.0) for _ in range(len(dataA))]
         labelB = [(0.0, 1.0) for _ in range(len(dataB))]
         data_origin = dataA + dataB
@@ -108,8 +119,8 @@ class Classifer(object):
         print('Successfully create training list!')
 
         # create test list (origin data with corresponding label)
-        dataA = glob('./datasets/{}/test/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/test/*.*'.format(self.dataset_B_dir))
+        dataA = piano_roll_files(self.data_root, self.dataset_A_dir, 'test')[:args.test_size]
+        dataB = piano_roll_files(self.data_root, self.dataset_B_dir, 'test')[:args.test_size]
         labelA = [(1.0, 0.0) for _ in range(len(dataA))]
         labelB = [(0.0, 1.0) for _ in range(len(dataB))]
         data_origin = dataA + dataB
@@ -163,6 +174,7 @@ class Classifer(object):
             accuracy_test = self.sess.run(self.accuracy_test, feed_dict={self.origin_test: data_test,
                                                                          self.label_test: label_test})
             print('epoch:', epoch, 'testing accuracy:', accuracy_test, 'loss:', d_loss)
+        self.writer.close()
 
     def save(self, checkpoint_dir, step):
         model_name = "classifier.model"
@@ -198,46 +210,50 @@ class Classifer(object):
         init_op = tf.global_variables_initializer()
         self.sess.run(init_op)
         # load the origin samples in npy format and sorted in ascending order
-        sample_files_origin = glob('./test/{}2{}_{}_{}_{}/{}/npy/origin/*.*'.format(self.dataset_A_dir,
+        sample_files_origin = glob(os.path.join(args.test_dir, '{}2{}_{}_{}_{}/{}/npy/origin/*.npy'.format(self.dataset_A_dir,
                                                                                     self.dataset_B_dir,
+                                                                                    self.now_datetime,
                                                                                     self.model,
                                                                                     self.sigma_d,
-                                                                                    self.now_datetime,
-                                                                                    args.which_direction))
+                                                                                    args.which_direction)))
         sample_files_origin.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[0]))
 
         # load the origin samples in npy format and sorted in ascending order
-        sample_files_transfer = glob('./test/{}2{}_{}_{}_{}/{}/npy/transfer/*.*'.format(self.dataset_A_dir,
+        sample_files_transfer = glob(os.path.join(args.test_dir, '{}2{}_{}_{}_{}/{}/npy/transfer/*.npy'.format(self.dataset_A_dir,
                                                                                         self.dataset_B_dir,
+                                                                                        self.now_datetime,
                                                                                         self.model,
                                                                                         self.sigma_d,
-                                                                                        self.now_datetime,
-                                                                                        args.which_direction))
+                                                                                        args.which_direction)))
         sample_files_transfer.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[0]))
 
         # load the origin samples in npy format and sorted in ascending order
-        sample_files_cycle = glob('./test/{}2{}_{}_{}_{}/{}/npy/cycle/*.*'.format(self.dataset_A_dir,
+        sample_files_cycle = glob(os.path.join(args.test_dir, '{}2{}_{}_{}_{}/{}/npy/cycle/*.npy'.format(self.dataset_A_dir,
                                                                                   self.dataset_B_dir,
+                                                                                  self.now_datetime,
                                                                                   self.model,
                                                                                   self.sigma_d,
-                                                                                  self.now_datetime,
-                                                                                  args.which_direction))
+                                                                                  args.which_direction)))
         sample_files_cycle.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[0]))
 
         # put the origin, transfer and cycle of the same phrase in one zip
         sample_files = list(zip(sample_files_origin, sample_files_transfer, sample_files_cycle))
+        counts = (len(sample_files_origin), len(sample_files_transfer), len(sample_files_cycle))
+        if not sample_files or len(set(counts)) != 1:
+            raise ValueError('Generate matching origin/transfer/cycle files with CycleGAN test first.')
+        sample_files = sample_files[:args.test_size]
 
         if self.load(args.checkpoint_dir):
             print(" [*] Load SUCCESS")
         else:
-            print(" [!] Load failed...")
+            raise FileNotFoundError('No classifier checkpoint for run_id {}'.format(args.run_id))
 
         # create a test path to store the generated sample midi files attached with probability
         test_dir_mid = os.path.join(args.test_dir, '{}2{}_{}_{}_{}/{}/mid_attach_prob'.format(self.dataset_A_dir,
                                                                                               self.dataset_B_dir,
+                                                                                              self.now_datetime,
                                                                                               self.model,
                                                                                               self.sigma_d,
-                                                                                              self.now_datetime,
                                                                                               args.which_direction))
         if not os.path.exists(test_dir_mid):
             os.makedirs(test_dir_mid)

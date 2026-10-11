@@ -5,13 +5,11 @@ from shutil import copyfile
 from glob import glob
 import tensorflow as tf
 import numpy as np
-import config
 from collections import namedtuple
 from module import *
 from utils import *
 from ops import *
-from metrics import *
-os.environ["CUDA_VISIBLE_DEVICES"] = os.environ['SGE_GPU']
+from experiment import piano_roll_files
 
 
 class cyclegan(object):
@@ -30,6 +28,8 @@ class cyclegan(object):
         self.dataset_A_dir = args.dataset_A_dir
         self.dataset_B_dir = args.dataset_B_dir
         self.sample_dir = args.sample_dir
+        self.data_root = args.data_root
+        self.log_dir = args.log_dir
 
         self.model = args.model
         self.discriminator = discriminator
@@ -51,7 +51,7 @@ class cyclegan(object):
 
         self._build_model()
         self.saver = tf.train.Saver(max_to_keep=30)
-        self.now_datetime = get_now_datetime()
+        self.now_datetime = args.run_id
         self.pool = ImagePool(args.max_size)
 
     def _build_model(self):
@@ -196,24 +196,31 @@ class cyclegan(object):
         else:
             self.d_optim = tf.train.AdamOptimizer(self.lr, beta1=args.beta1).minimize(self.D_loss, var_list=self.d_vars)
         self.g_optim = tf.train.AdamOptimizer(self.lr, beta1=args.beta1).minimize(self.g_loss, var_list=self.g_vars)
+        self.saver = tf.train.Saver(max_to_keep=30)
 
         init_op = tf.global_variables_initializer()
         self.sess.run(init_op)
 
         # define the path which stores the log file, format is "{A}2{B}_{date}_{model}_{sigma}".
-        log_dir = './logs/{}2{}_{}_{}_{}'.format(self.dataset_A_dir, self.dataset_B_dir, self.now_datetime,
-                                                 self.model, self.sigma_d)
+        log_dir = os.path.join(self.log_dir, '{}2{}_{}_{}_{}'.format(
+            self.dataset_A_dir, self.dataset_B_dir, self.now_datetime, self.model, self.sigma_d))
         # log_dir = './logs/{}2{}_{}_{}_{}'.format(self.dataset_A_dir, self.dataset_B_dir, '2018-06-10',
         #                                          self.model, self.sigma_d)
         self.writer = tf.summary.FileWriter(log_dir, self.sess.graph)
 
         # Data from domain A and B, and mixed dataset for partial and full models.
-        dataA = glob('./datasets/{}/train/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/train/*.*'.format(self.dataset_B_dir))
+        dataA = piano_roll_files(self.data_root, self.dataset_A_dir, 'train')
+        dataB = piano_roll_files(self.data_root, self.dataset_B_dir, 'train')
         if self.model == 'partial':
             data_mixed = dataA + dataB
         if self.model == 'full':
-            data_mixed = glob('./datasets/JCP_mixed/*.*')
+            data_mixed = piano_roll_files(self.data_root, 'JCP_mixed')
+
+        batch_idxs = min(len(dataA), len(dataB), args.train_size) // self.batch_size
+        if batch_idxs < 1:
+            raise ValueError('Each domain needs at least batch_size training phrases; check --train_size.')
+        if self.model != 'base' and len(data_mixed) < batch_idxs * self.batch_size:
+            raise ValueError('The mixed dataset has too few phrases for this training run.')
 
         counter = 1
         start_time = time.time()
@@ -222,7 +229,7 @@ class cyclegan(object):
             if self.load(args.checkpoint_dir):
                 print(" [*] Load SUCCESS")
             else:
-                print(" [!] Load failed...")
+                raise FileNotFoundError('No checkpoint for run_id {} in {}'.format(args.run_id, args.checkpoint_dir))
 
         for epoch in range(args.epoch):
 
@@ -303,7 +310,7 @@ class cyclegan(object):
 
                 counter += 1
 
-                if np.mod(counter, args.print_freq) == 1:
+                if counter % args.print_freq == 0:
                     sample_dir = os.path.join(self.sample_dir, '{}2{}_{}_{}_{}'.format(self.dataset_A_dir,
                                                                                        self.dataset_B_dir,
                                                                                        self.now_datetime,
@@ -318,8 +325,12 @@ class cyclegan(object):
                         os.makedirs(sample_dir)
                     self.sample_model(sample_dir, epoch, idx)
 
-                if np.mod(counter, batch_idxs) == 1:
+                if counter % args.save_freq == 0:
                     self.save(args.checkpoint_dir, counter)
+
+            # Also save a run containing only a single batch.
+            self.save(args.checkpoint_dir, counter)
+        self.writer.close()
 
     def save(self, checkpoint_dir, step):
         model_name = "cyclegan.model"
@@ -357,10 +368,8 @@ class cyclegan(object):
         print('Processing sample......')
 
         # Testing data from 2 domains A and B and sorted in ascending order
-        dataA = glob('./datasets/{}/train/*.*'.format(self.dataset_A_dir))
-        dataB = glob('./datasets/{}/train/*.*'.format(self.dataset_B_dir))
-        dataA.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
-        dataB.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
+        dataA = piano_roll_files(self.data_root, self.dataset_A_dir, 'train')
+        dataB = piano_roll_files(self.data_root, self.dataset_B_dir, 'train')
 
         batch_files = list(zip(dataA[:self.batch_size], dataB[:self.batch_size]))
         sample_images = [load_npy_data(batch_file) for batch_file in batch_files]
@@ -378,28 +387,28 @@ class cyclegan(object):
         if not os.path.exists(os.path.join(sample_dir, 'A2B')):
             os.makedirs(os.path.join(sample_dir, 'A2B'))
 
-        save_midis(real_A_binary, './{}/A2B/{:02d}_{:04d}_origin.mid'.format(sample_dir, epoch, idx))
-        save_midis(fake_B_binary, './{}/A2B/{:02d}_{:04d}_transfer.mid'.format(sample_dir, epoch, idx))
-        save_midis(fake_A__binary, './{}/A2B/{:02d}_{:04d}_cycle.mid'.format(sample_dir, epoch, idx))
-        save_midis(real_B_binary, './{}/B2A/{:02d}_{:04d}_origin.mid'.format(sample_dir, epoch, idx))
-        save_midis(fake_A_binary, './{}/B2A/{:02d}_{:04d}_transfer.mid'.format(sample_dir, epoch, idx))
-        save_midis(fake_B__binary, './{}/B2A/{:02d}_{:04d}_cycle.mid'.format(sample_dir, epoch, idx))
+        save_midis(real_A_binary, os.path.join(sample_dir, 'A2B', '{:02d}_{:04d}_origin.mid'.format(epoch, idx)))
+        save_midis(fake_B_binary, os.path.join(sample_dir, 'A2B', '{:02d}_{:04d}_transfer.mid'.format(epoch, idx)))
+        save_midis(fake_A__binary, os.path.join(sample_dir, 'A2B', '{:02d}_{:04d}_cycle.mid'.format(epoch, idx)))
+        save_midis(real_B_binary, os.path.join(sample_dir, 'B2A', '{:02d}_{:04d}_origin.mid'.format(epoch, idx)))
+        save_midis(fake_A_binary, os.path.join(sample_dir, 'B2A', '{:02d}_{:04d}_transfer.mid'.format(epoch, idx)))
+        save_midis(fake_B__binary, os.path.join(sample_dir, 'B2A', '{:02d}_{:04d}_cycle.mid'.format(epoch, idx)))
 
     def test(self, args):
         init_op = tf.global_variables_initializer()
         self.sess.run(init_op)
         if args.which_direction == 'AtoB':
-            sample_files = glob('./datasets/{}/test/*.*'.format(self.dataset_A_dir))
+            sample_files = piano_roll_files(self.data_root, self.dataset_A_dir, 'test')
         elif args.which_direction == 'BtoA':
-            sample_files = glob('./datasets/{}/test/*.*'.format(self.dataset_B_dir))
+            sample_files = piano_roll_files(self.data_root, self.dataset_B_dir, 'test')
         else:
             raise Exception('--which_direction must be AtoB or BtoA')
-        sample_files.sort(key=lambda x: int(os.path.splitext(os.path.basename(x))[0].split('_')[-1]))
+        sample_files = sample_files[:args.test_size]
 
         if self.load(args.checkpoint_dir):
             print(" [*] Load SUCCESS")
         else:
-            print(" [!] Load failed...")
+            raise FileNotFoundError('No checkpoint for run_id {} in {}'.format(args.run_id, args.checkpoint_dir))
 
         if args.which_direction == 'AtoB':
             out_origin, out_var, out_var_cycle, in_var = (self.test_A_binary, self.testB_binary, self.testA__binary,
